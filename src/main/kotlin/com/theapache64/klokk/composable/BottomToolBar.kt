@@ -1,17 +1,25 @@
 package com.theapache64.klokk.composable
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.DarkMode
+import androidx.compose.material.icons.outlined.LightMode
+import androidx.compose.material.icons.outlined.Mood
+import androidx.compose.material.icons.outlined.Paid
 import androidx.compose.material.icons.outlined.PlayArrow
+import androidx.compose.material.icons.outlined.Radar
 import androidx.compose.material.icons.outlined.Stop
 import androidx.compose.material.icons.outlined.Update
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.theapache64.klokk.IS_DEBUG
 import com.theapache64.klokk.movement.core.Movement
+import com.theapache64.klokk.theme.KlokkTheme
 
 @Composable
 fun BottomToolBar(
@@ -31,6 +40,7 @@ fun BottomToolBar(
     onStopClicked: () -> Unit,
     onTextInputChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
+    theme: MutableState<Boolean>,
 ) {
     Row(
         modifier = modifier
@@ -72,7 +82,8 @@ fun BottomToolBar(
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
         ) {
 
             // TextField
@@ -85,14 +96,23 @@ fun BottomToolBar(
                     Text("Try some text here")
                 }
             )*/
-
             // Debug Info
             if (IS_DEBUG) {
                 Text(
                     text = "DEBUG: $activeMovement",
-                    color = Color.White,
                     textAlign = TextAlign.End
                 )
+            }
+            IconButton(
+                onClick = {
+                    theme.value = !theme.value
+                }
+            ) {
+                if (theme.value) {
+                    Icon(imageVector = Icons.Outlined.LightMode, contentDescription = "light mode icon")
+                } else {
+                    Icon(imageVector = Icons.Outlined.DarkMode,contentDescription = "dark mode icon")
+                }
             }
         }
     }
@@ -111,7 +131,6 @@ private fun IconTextButton(
 
         Icon(
             imageVector = imageVector,
-            tint = Color.White,
             contentDescription = "ToolBar Icon",
             modifier = Modifier.padding(end = 10.dp)
         )

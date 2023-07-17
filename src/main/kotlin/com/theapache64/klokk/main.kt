@@ -1,13 +1,11 @@
 package com.theapache64.klokk
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
@@ -16,7 +14,6 @@ import com.theapache64.klokk.composable.BottomToolBar
 import com.theapache64.klokk.composable.Clock
 import com.theapache64.klokk.movement.alphabet.TextMatrixGenerator
 import com.theapache64.klokk.movement.core.Movement
-import com.theapache64.klokk.theme.Black
 import com.theapache64.klokk.theme.KlokkTheme
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
@@ -32,7 +29,6 @@ const val CLOCKS_CONTAINER_WIDTH = CLOCK_SIZE * COLUMNS
 const val CLOCKS_CONTAINER_HEIGHT = CLOCK_SIZE * ROWS
 const val ENJOY_TIME_IN_MILLIS = 1500L
 const val IS_DEBUG = true
-private val BACKGROUND_COLOR = Black
 
 @OptIn(ExperimentalComposeUiApi::class)
 @ExperimentalFoundationApi
@@ -53,6 +49,8 @@ fun main() = application {
         // To hold and control movement transition
         var activeMovement by remember { mutableStateOf<Movement>(Movement.StandBy) }
 
+        val themeState = remember { mutableStateOf(true) }
+
         // To control the auto playing animation
         var shouldPlayAutoAnim by remember { mutableStateOf(true) }
 
@@ -61,11 +59,10 @@ fun main() = application {
         // Generating degree matrix using the active movement
         val degreeMatrix = activeMovement.getMatrixGenerator().getVerifiedMatrix()
 
-        KlokkTheme {
+        KlokkTheme (isDark = themeState.value) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(BACKGROUND_COLOR),
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -79,7 +76,7 @@ fun main() = application {
                                 needleOneDegree = clockData.degreeOne,
                                 needleTwoDegree = clockData.degreeTwo,
                                 durationInMillis = activeMovement.durationInMillis,
-                                modifier = Modifier.requiredSize(CLOCK_SIZE.dp)
+                                modifier = Modifier.requiredSize(CLOCK_SIZE.dp),
                             )
                         }
                     }
@@ -174,7 +171,8 @@ fun main() = application {
                     onStopClicked = {
                         shouldPlayAutoAnim = false
                         activeMovement = Movement.StandBy
-                    }
+                    },
+                    theme = themeState
                 )
             }
         }

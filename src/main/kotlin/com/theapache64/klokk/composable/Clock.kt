@@ -11,20 +11,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.theapache64.klokk.model.ClockData
-import com.theapache64.klokk.theme.CodGray
 import kotlin.math.cos
 import kotlin.math.sin
-
-
-private val NEEDLE_COLOR = Color.White
-val CLOCK_BACKGROUND = CodGray
 
 @Composable
 fun Clock(
@@ -34,6 +30,8 @@ fun Clock(
     delay: Int = 0,
     easing: Easing = LinearEasing,
     modifier: Modifier = Modifier,
+    backgroundColor: Color = colors.background,
+    needleColor: Color =  colors.secondary
 ) {
 
     val needleOneRadian = (needleOneDegree * Math.PI / 180).toFloat()
@@ -60,13 +58,13 @@ fun Clock(
         val radius = size.minDimension / 2f
 
         drawCircle(
-            color = CLOCK_BACKGROUND,
+            color= backgroundColor,
             radius = radius
         )
 
         // To make the needle origin rounded.
         drawCircle(
-            color = NEEDLE_COLOR,
+            color= backgroundColor,
             radius = needleWidth * 0.487f
         )
 
@@ -74,7 +72,7 @@ fun Clock(
 
         // Needle One
         drawLine(
-            color = NEEDLE_COLOR,
+            color= needleColor,
             start = center,
             end = Offset(
                 // Finding end coordinate for the given radian
@@ -87,7 +85,7 @@ fun Clock(
 
         // Needle two
         drawLine(
-            color = NEEDLE_COLOR,
+            color= needleColor,
             start = center,
             end = Offset(
                 // Finding end coordinate for the given degree
